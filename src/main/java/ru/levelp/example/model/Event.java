@@ -1,12 +1,30 @@
 package ru.levelp.example.model;
 
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
+@Entity
+@Table(name = "EVENTS")
 public class Event {
+    @Id
+    @GeneratedValue
+    private int id;
+
+    @Column
     private String title;
+
+    @Column
     private String description;
+
+    @Column
     private Date start;
+
+    @Column
     private Date end;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    private List<Ticket> tickets;
 
     public Event() {
     }
@@ -16,6 +34,14 @@ public class Event {
         this.description = description;
         this.start = start;
         this.end = end;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -48,5 +74,13 @@ public class Event {
 
     public void setEnd(Date end) {
         this.end = end;
+    }
+
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
     }
 }
