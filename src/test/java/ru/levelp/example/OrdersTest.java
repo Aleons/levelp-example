@@ -5,10 +5,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import ru.levelp.example.dao.TicketsDAO;
 import ru.levelp.example.logic.Orders;
-import ru.levelp.example.model.Cart;
-import ru.levelp.example.model.Event;
-import ru.levelp.example.model.Ticket;
-import ru.levelp.example.model.User;
+import ru.levelp.example.model.*;
 
 import java.util.Date;
 import java.util.List;
@@ -20,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 public class OrdersTest {
     @Test
     public void testAccept() {
-        User user = new User("test-user", "Test user");
+        User user = new Customer("test-user", "Test user");
         Cart cart = new Cart(user);
 
         Event event = new Event("test event", "",
@@ -58,7 +55,7 @@ public class OrdersTest {
 
     @Test
     public void testAcceptUsingMockito() {
-        User user = new User("test-user", "Test user");
+        User user = new Customer("test-user", "Test user");
         Cart cart = new Cart(user);
 
         Event event = new Event("test event", "",

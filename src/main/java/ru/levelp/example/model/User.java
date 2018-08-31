@@ -3,8 +3,10 @@ package ru.levelp.example.model;
 import javax.persistence.*;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "KIND", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "USERS")
-public class User {
+public abstract class User {
     @Id
     @Column(length = 50)
     private String login;

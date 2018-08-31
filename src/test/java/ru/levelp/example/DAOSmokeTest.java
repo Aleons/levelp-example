@@ -7,9 +7,11 @@ import ru.levelp.example.dao.EventsDAO;
 import ru.levelp.example.dao.EventsDAOImpl;
 import ru.levelp.example.dao.UsersDAO;
 import ru.levelp.example.dao.UsersDAOImpl;
+import ru.levelp.example.model.Customer;
 import ru.levelp.example.model.Event;
 import ru.levelp.example.model.User;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -17,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class DAOSmokeTest {
     private EntityManagerFactory emf;
@@ -42,10 +45,18 @@ public class DAOSmokeTest {
     public void userAdd() {
         UsersDAO usersDAO = new UsersDAOImpl(em);
 
-        User user = new User("tester", "Test User");
+        User user = new Customer("tester", "Test User");
         usersDAO.add(user);
 
         assertEquals(user, em.find(User.class, "tester"));
+    }
+
+    @Test(expected = EntityExistsException.class)
+    public void userAddConstraintViolation() {
+        UsersDAO usersDAO = new UsersDAOImpl(em);
+
+        usersDAO.add(new Customer("tester", "Test User"));
+        usersDAO.add(new Customer("tester", "Test User"));
     }
 
     @Test
