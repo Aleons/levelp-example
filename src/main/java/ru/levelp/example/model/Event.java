@@ -18,9 +18,11 @@ public class Event {
     private String description;
 
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date start;
 
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date end;
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
