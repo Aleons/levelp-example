@@ -1,50 +1,39 @@
 package ru.levelp.example;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.levelp.example.dao.EventsDAO;
-import ru.levelp.example.dao.EventsDAOImpl;
 import ru.levelp.example.dao.UsersDAO;
-import ru.levelp.example.dao.UsersDAOImpl;
 import ru.levelp.example.model.Customer;
 import ru.levelp.example.model.Event;
 import ru.levelp.example.model.User;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestConfiguration.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class DAOSmokeTest {
-    private EntityManagerFactory emf;
+    @Autowired
     private EntityManager em;
 
-    @Before
-    public void setup() {
-        emf = Persistence.createEntityManagerFactory("TestPersistenceUnit");
-        em = emf.createEntityManager();
-    }
+    @Autowired
+    private UsersDAO usersDAO;
 
-    @After
-    public void after() {
-        if (em != null) {
-            em.close();
-        }
-        if (emf != null) {
-            emf.close();
-        }
-    }
+    @Autowired
+    private EventsDAO eventsDAO;
 
     @Test
     public void userAdd() {
-        UsersDAO usersDAO = new UsersDAOImpl(em);
-
         User user = new Customer("tester", "Test User");
         usersDAO.add(user);
 
@@ -53,8 +42,6 @@ public class DAOSmokeTest {
 
     @Test(expected = EntityExistsException.class)
     public void userAddConstraintViolation() {
-        UsersDAO usersDAO = new UsersDAOImpl(em);
-
         usersDAO.add(new Customer("tester", "Test User"));
         usersDAO.add(new Customer("tester", "Test User"));
     }
@@ -63,11 +50,10 @@ public class DAOSmokeTest {
     public void eventsAddAndSearch() {
         Date now = new Date();
         Event event = new Event("test", "test", now, now);
-        EventsDAO dao = new EventsDAOImpl(em);
 
-        dao.add(event);
+        eventsDAO.add(event);
 
-        List<Event> found = dao.findEvents(now);
+        List<Event> found = eventsDAO.findEvents(now);
         assertEquals(1, found.size());
         assertEquals(event, found.get(0));
     }
