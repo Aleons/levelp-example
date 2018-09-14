@@ -16,7 +16,7 @@ public class CharsetEncodingFilter extends HttpFilter {
 
 //        HttpServletRequest servletRequest = (HttpServletRequest) request;
 //        HttpServletResponse servletResponse = (HttpServletResponse) response;
-//        if (servletRequest.getSession().getAttribute("user") == null) {
+//        if (servletRequest.getSession(false).getAttribute("user") == null) {
 //            servletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 //            return;
 //        }
