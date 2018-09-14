@@ -3,14 +3,15 @@ package ru.levelp.example.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.*;
 import ru.levelp.example.dao.EventsDAO;
 import ru.levelp.example.model.Event;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,39 +33,57 @@ public class EventsListController {
         return "event-list";
     }
 
+    @ModelAttribute("formBean")
+    public EventAddFormBean createDefaultFormBean() {
+        return new EventAddFormBean();
+    }
+
     @RequestMapping(method = RequestMethod.GET, path = "/events/add")
     public String addEventShowForm() {
         return "event-add";
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/events/add")
-    public String addEventPostForm(@RequestParam("title") String title,
-                                   @RequestParam String description,
-                                   @RequestParam String start,
-                                   @RequestParam String end,
-                                   @RequestHeader("User-Agent") String userAgent,
-                                   ModelMap model) {
-        if (title == null) {
-            throw new IllegalArgumentException("title is missing");
-        }
-        if (description == null) {
-            throw new IllegalArgumentException("description is missing");
-        }
-
+    public String addEventPostForm(@Valid @ModelAttribute("formBean") EventAddFormBean formBean,
+                                   BindingResult binding) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        Date startDate;
-        Date endDate;
+        Date startDate = null;
+        Date endDate = null;
+
+        /*if (formBean.getTitle().isEmpty()) {
+            binding.addError(new FieldError("formBean",
+                    "title",
+                    "Заголовок пустой"));
+        }
+        if (formBean.getDescription().isEmpty()) {
+            binding.addError(new FieldError("formBean",
+                    "description",
+                    "Описание пустое"));
+        }*/
 
         try {
-            startDate = format.parse(start);
-            endDate = format.parse(end);
+            startDate = format.parse(formBean.getStart());
         } catch (ParseException e) {
-            throw new IllegalArgumentException("Invalid date");
+            binding.addError(new FieldError("formBean",
+                    "start",
+                    "Неверный формат даты"));
         }
 
-        Event event = new Event(title, description, startDate, endDate);
+        try {
+            endDate = format.parse(formBean.getEnd());
+        } catch (ParseException e) {
+            binding.addError(new FieldError("formBean",
+                    "end",
+                    "Неверный формат даты"));
+        }
+
+        if (binding.hasErrors()) {
+            return "event-add";
+        }
+
+        Event event = new Event(formBean.getTitle(), formBean.getDescription(), startDate, endDate);
         eventsDAO.add(event);
 
-        return eventsList(userAgent, model);
+        return "redirect:/events/all";
     }
 }
