@@ -50,7 +50,7 @@ public class ProdConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/styles/*.css")
-                .addResourceLocations("/styles/");
+        registry.addResourceHandler("/styles/*.css", "/htmls/*.html")
+                .addResourceLocations("/styles/", "/htmls/");
     }
 }
