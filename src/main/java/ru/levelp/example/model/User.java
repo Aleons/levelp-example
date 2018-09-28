@@ -14,12 +14,23 @@ public abstract class User {
     @Column(length = 200)
     private String displayName;
 
+    @Column
+    private String encryptedPassword;
+
     public User(String login, String displayName) {
         this.login = login;
         this.displayName = displayName;
     }
 
     public User() {
+    }
+
+    public String getEncryptedPassword() {
+        return encryptedPassword;
+    }
+
+    public void setEncryptedPassword(String encryptedPassword) {
+        this.encryptedPassword = encryptedPassword;
     }
 
     public String getLogin() {

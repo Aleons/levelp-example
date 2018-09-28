@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <jsp:useBean id="formBean" scope="request" type="ru.levelp.example.web.EventAddFormBean" />
 <html>
 <head>
@@ -16,6 +17,7 @@
     <form:form action="/events/add"
                method="post"
                enctype="application/x-www-form-urlencoded"
+               acceptCharset="UTF-8"
                modelAttribute="formBean">
         <p>
             Название: <form:input type="text" path="title" />
