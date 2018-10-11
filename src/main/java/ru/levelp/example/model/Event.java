@@ -1,6 +1,10 @@
 package ru.levelp.example.model;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.Past;
 import java.util.Date;
 import java.util.List;
 
@@ -12,17 +16,21 @@ public class Event {
     private int id;
 
     @Column
+    @Length(min = 5, max = 50)
     private String title;
 
-    @Column
+    @Column(length = 50)
+    @Length(min = 5, max = 50)
     private String description;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
+    @Future
     private Date start;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
+    @Future
     private Date end;
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)

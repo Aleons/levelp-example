@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript">
+        function loadEvents() {
+            var request = new XMLHttpRequest();
+
+            request.open("get", "/api/events/all", true);
+            request.onreadystatechange = function() {
+                if (request.readyState === 4) {
+                    var response = JSON.parse(request.responseText);
+                    var events = response.events;
+                    var i;
+
+                    var rows = document.getElementById('rows');
+                    rows.innerHTML = '';
+
+                    for (i = 0; i < events.length; ++i) {
+                        var event = events[i];
+
+                        var title = event.title;
+                        var description = event.description;
+                        var startDate = event.start;
+
+                        var tr = document.createElement("tr");
+                        var titleCell = document.createElement("td");
+                        titleCell.textContent = title;
+                        var descriptionCell = document.createElement("td");
+                        descriptionCell.textContent = description;
+                        var startDateCell = document.createElement("td");
+                        startDateCell.textContent = startDate;
+
+                        tr.appendChild(titleCell);
+                        tr.appendChild(descriptionCell);
+                        tr.appendChild(startDateCell);
+
+                        rows.appendChild(tr);
+                    }
+                }
+            };
+            request.send();
+        }
+    </script>
+</head>
+<body>
+    <button onclick="loadEvents()">Load events...</button>
+
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>title</th>
+                    <th>description</th>
+                    <th>start date</th>
+                </tr>
+            </thead>
+            <tbody id="rows">
+                <tr>
+                    <td colspan="3">Loading...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

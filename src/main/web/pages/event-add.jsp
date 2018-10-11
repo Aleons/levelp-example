@@ -1,27 +1,43 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<jsp:useBean id="formBean" scope="request" type="ru.levelp.example.web.EventAddFormBean" />
 <html>
 <head>
     <title>Title</title>
+    <style type="text/css">
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
     <h1>Добавление события</h1>
 
-    <form action="/events/add" method="post" enctype="application/x-www-form-urlencoded">
+    <form:form action="/events/add"
+               method="post"
+               enctype="application/x-www-form-urlencoded"
+               acceptCharset="UTF-8"
+               modelAttribute="formBean">
         <p>
-            Название: <input type="text" name="title">
+            Название: <form:input type="text" path="title" />
+            <form:errors path="title" cssClass="error" />
         </p>
         <p>
-            Описание: <input type="text" name="description">
+            Описание: <form:input type="text" path="description" />
+            <form:errors path="description" cssClass="error" />
         </p>
         <p>
-            Дата начала: <input type="datetime-local" name="start">
+            Дата начала: <form:input type="datetime-local" path="start" />
+            <form:errors path="start" cssClass="error" />
         </p>
         <p>
-            Дата окночания: <input type="datetime-local" name="end">
+            Дата окночания: <form:input type="datetime-local" path="end" />
+            <form:errors path="end" cssClass="error" />
         </p>
         <p>
             <input type="submit" />
         </p>
-    </form>
+    </form:form>
 </body>
 </html>
